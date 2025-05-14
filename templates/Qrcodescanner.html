@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QR Code Scanner</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 flex flex-col items-center justify-center min-h-screen">
+  <a href="{% url 'index' %}" class="mt-6 inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition duration-200">
+    ← Go Back to Index Page
+  </a>
+  
+  
+  <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-xl text-center">
+    <h1 class="text-3xl font-bold text-blue-600 mb-4">QR Code Scanner</h1>
+    <p class="mb-4">Allow camera access and scan your QR code below:</p>
+
+    <div id="qr-reader" class="mx-auto w-full" style="max-width: 500px;"></div>
+    <p id="qr-result" class="mt-6 text-lg font-semibold text-green-600"></p>
+  </div>
+
+  <script>
+    function extractEnrollmentNumber(text) {
+      const match = text.match(/Enrollment Number:\s*(\d+)/i);
+      return match ? match[1] : null;
+    }
+  
+    function onScanSuccess(decodedText, decodedResult) {
+      const enrollmentNumber = extractEnrollmentNumber(decodedText);
+  
+      if (!enrollmentNumber) {
+        document.getElementById("qr-result").innerText = "Invalid QR Code format.";
+        return;
+      }
+  
+      // Get user location
+      navigator.geolocation.getCurrentPosition(function(position) {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+  
+        document.getElementById("qr-result").innerText = `Sending attendance for Enrollment #${enrollmentNumber}...`;
+  
+        // Create a form and submit POST request
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = `/mark_attendance/${enrollmentNumber}/`;
+  
+        // Add CSRF token (assuming it's in a cookie)
+        const csrfToken = getCookie("csrftoken");
+        const csrfInput = document.createElement("input");
+        csrfInput.type = "hidden";
+        csrfInput.name = "csrfmiddlewaretoken";
+        csrfInput.value = csrfToken;
+        form.appendChild(csrfInput);
+  
+        // Add latitude
+        const latInput = document.createElement("input");
+        latInput.type = "hidden";
+        latInput.name = "latitude";
+        latInput.value = latitude;
+        form.appendChild(latInput);
+  
+        // Add longitude
+        const lonInput = document.createElement("input");
+        lonInput.type = "hidden";
+        lonInput.name = "longitude";
+        lonInput.value = longitude;
+        form.appendChild(lonInput);
+  
+        document.body.appendChild(form);
+        form.submit();
+  
+      }, function(error) {
+        document.getElementById("qr-result").innerText = "Location access denied. Cannot mark attendance.";
+      });
+    }
+  
+    // Utility to get CSRF token from cookies
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+  
+    // Start QR scanner
+    const qrReader = new Html5Qrcode("qr-reader");
+    Html5Qrcode.getCameras().then(devices => {
+      if (devices && devices.length) {
+        qrReader.start(
+          { facingMode: "environment" },
+          { fps: 10, qrbox: { width: 250, height: 250 } },
+          onScanSuccess
+        );
+      }
+    }).catch(err => {
+      console.error(err);
+      document.getElementById("qr-result").innerText = "Camera error: " + err;
+    });
+  </script>
+  
+  
+</body>
+</html>

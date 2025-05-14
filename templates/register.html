@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Registration Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #141E30;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px;
+        }
+        .form-container {
+            background: rgb(238, 238, 240);
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(212, 188, 231, 0.1);
+            width: 600px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #261955;
+            border-radius: 6px;
+        }
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px 20px;
+        }
+        .form-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+        button {
+            padding: 12px 20px;
+            width: 48%;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .submit-btn {
+            background-color: #3498db;
+            color: rgb(27, 17, 83);
+        }
+        .submit-btn:hover {
+            background-color: #2980b9;
+        }
+        .clear-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .clear-btn:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Student Registration Form</h2>
+    <form id="registrationForm" action="/register" method="POST" onsubmit="return validateForm()">
+        <label for="enroll">Enrollment Number</label>
+        <input type="text" id="enroll" name="enrollment_number" required>
+
+        <label for="name">Student Name</label>
+        <input type="text" id="name" name="student_name" required>
+
+        <label for="email">Student Email</label>
+        <input type="email" id="email" name="student_email" required>
+
+        <label for="phone">Student Phone Number</label>
+        <input type="tel" id="phone" name="student_phone" required>
+
+        <label for="course">Course</label>
+        <input type="text" id="course" name="course" required>
+
+        <label for="section">Section</label>
+        <input type="text" id="section" name="section" required>
+
+        <label for="semester">Semester</label>
+        <input type="text" id="semester" name="semester" required>
+
+        <label>Subjects (1 to 10)</label>
+        <div class="subjects-grid">
+            <input type="text" name="subject1" placeholder="Subject 1 (required)" required>
+            <input type="text" name="subject2" placeholder="Subject 2 (required)" required>
+            <input type="text" name="subject3" placeholder="Subject 3 (required)" required>
+            <input type="text" name="subject4" placeholder="Subject 4 (required)" required>
+            <input type="text" name="subject5" placeholder="Subject 5 (required)" required>
+            <input type="text" name="subject6" placeholder="Subject 6 (optional)">
+            <input type="text" name="subject7" placeholder="Subject 7 (optional)">
+            <input type="text" name="subject8" placeholder="Subject 8 (optional)">
+            <input type="text" name="subject9" placeholder="Subject 9 (optional)">
+            <input type="text" name="subject10" placeholder="Subject 10 (optional)">
+        </div>
+
+        <label for="parent_name">Parent's Name</label>
+        <input type="text" id="parent_name" name="parent_name" required>
+
+        <label for="parent_email">Parent's Email</label>
+        <input type="email" id="parent_email" name="parent_email" required>
+
+        <div class="form-buttons">
+            <button type="submit" class="submit-btn">Register</button>
+            <button type="button" class="clear-btn" onclick="document.getElementById('registrationForm').reset();">Clear</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function validateForm() {
+        const studentEmail = document.getElementById("email").value;
+        const parentEmail = document.getElementById("parent_email").value;
+        const phone = document.getElementById("phone").value;
+
+        const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+        const phonePattern = /^[0-9]{10}$/;
+
+        if (!emailPattern.test(studentEmail)) {
+            alert("Please enter a valid student email address.");
+            return false;
+        }
+
+        if (!emailPattern.test(parentEmail)) {
+            alert("Please enter a valid parent email address.");
+            return false;
+        }
+
+        if (!phonePattern.test(phone)) {
+            alert("Please enter a 10-digit student phone number.");
+            return false;
+        }
+
+        return true; // Allow form submission
+    }
+</script>
+
+</body>
+</html>

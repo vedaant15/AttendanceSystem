@@ -1,0 +1,21 @@
+<h1>Attendance for {{ signup_user.name }}</h1>
+{% if attendance_records %}
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in attendance_records %}
+            <tr>
+                <td>{{ record.date }}</td>
+                <td>{% if record.is_present %}Present{% else %}Absent{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No attendance records found.</p>
+{% endif %}

@@ -1,0 +1,21 @@
+<h1>All Attendance Records</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Student Name</th>
+            <th>Enrollment Number</th>
+            <th>Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for attendance in attendances %}
+        <tr>
+            <td>{{ attendance.student.name }}</td>
+            <td>{{ attendance.student.enrollment_number }}</td>
+            <td>{{ attendance.date }}</td>
+            <td>{% if attendance.is_present %}Present{% else %}Absent{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

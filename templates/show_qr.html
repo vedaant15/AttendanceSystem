@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QR Code</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+<div class="bg-white shadow-md rounded-lg p-6 text-center">
+    <h1 class="text-2xl font-bold text-blue-600 mb-4">Your QR Code</h1>
+
+    <!-- QR Code Image -->
+    <img id="qrImage" src="data:image/png;base64,{{ qr_code }}" alt="QR Code" class="mx-auto mb-6"/>
+
+    <!-- Download Button -->
+    <a href="data:image/png;base64,{{ qr_code }}" download="qr_code.png"
+       class="inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mb-4">
+        ⬇ Download QR Code
+    </a>
+    <br>
+
+    <!-- Back Button -->
+    <a href="{% url 'index' %}" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+        ← Go Back to Index Page
+    </a>
+</div>
+
+</body>
+</html>
